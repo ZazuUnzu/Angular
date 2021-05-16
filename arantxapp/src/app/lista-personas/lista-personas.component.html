@@ -1,0 +1,164 @@
+<mat-card class="contenedor">
+  <h1>Formulario de gestión de usuarios</h1>
+<h3>Una app de Arantxa Unzueta para la práctica del módulo de Angular</h3>
+        <h2>Insertar / Actualizar contacto</h2>
+
+<form #miform="ngForm" (ngSubmit)="insertarContacto()">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+        <input
+          type="text"
+          class="form-control" id="nombre"
+          [(ngModel)]="persona.nombre"
+          matInput
+          placeholder="Nombre"
+          required
+          minlength="3"
+          #nombre="ngModel"
+          name = "nombre"
+          [ngClass]="{'is-valid': !nombre.invalid, 'is-invalid': nombre.invalid}"
+        />
+        <mat-error *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"></mat-error>
+        <mat-error *ngIf="nombre.errors?.minlength">Mínimo 3 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Apellidos</mat-label>
+      <input
+        type="text"
+        class="form-control" id="apellidos"
+        [(ngModel)]="persona.apellidos"
+        matInput
+        placeholder="Apellidos"
+        required
+        minlength="3"
+        #apellidos="ngModel"
+        name="apellidos"
+        [ngClass]="{'is-valid': !apellidos.invalid, 'is-invalid': apellidos.invalid}"
+      />
+      <mat-error *ngIf="apellidos.invalid && (apellidos.dirty || apellidos.touched)"></mat-error>
+      <mat-error *ngIf="apellidos.errors?.minlength">Mínimo 3 caracteres</mat-error>
+    </mat-form-field>
+
+  <mat-form-field appearance="outline">
+      <mat-label>Edad</mat-label>
+      <input
+        type="number"
+        class="form-control" id="edad"
+        [(ngModel)]="persona.edad"
+        matInput
+        placeholder="edad"
+        required
+        #edad="ngModel"
+        name="edad"
+        minlength="2"
+        [ngClass]="{'is-valid': !edad.invalid, 'is-invalid': edad.invalid}"
+      />
+      <mat-error *ngIf="edad.invalid && (edad.dirty || edad.touched)"></mat-error>
+      <mat-error *ngIf="edad.errors?.minlength">Mínimo 3 caracteres</mat-error>
+    </mat-form-field>
+
+     <mat-form-field appearance="outline">
+      <mat-label>DNI</mat-label>
+      <input
+        type="text"
+        class="form-control" id="dni"
+        [(ngModel)]="persona.dni"
+        matInput
+        placeholder="DNI sin espacios ni guiones"
+        pattern="[0-9]{8}[A-Za-z]{1}"
+        required
+        minlength="9"
+        maxlength="9"
+        #dni="ngModel"
+        name="dni"
+        [ngClass]="{'is-valid': !dni.invalid, 'is-invalid': dni.invalid}"
+      />
+      <mat-error *ngIf="dni.invalid && (dni.dirty || dni.touched)"></mat-error>
+      <mat-error *ngIf="dni.errors?.pattern || dni.errors?.minlength || dni.errors?.maxlength">8 números y una letra</mat-error>
+
+   </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Cumpleaños</mat-label>
+      <input
+        matInput [matDatepicker]="picker"
+        class="form-control" id="cumple"
+        [(ngModel)]= "persona.cumpleanos"
+        class="form-control"
+        placeholder="dd/mm/aaaa"
+        required
+        #cumple="ngModel"
+        name="cumple"
+        [ngClass]="{'is-valid': cumple.valid, 'is-invalid': cumple.invalid}"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="cumple.invalid && (dni.dirty || dni.touched)"></mat-error>
+      <mat-error *ngIf="cumple.errors?.pattern">Introduce o selecciona una fecha</mat-error>
+
+    </mat-form-field>
+
+     <mat-form-field appearance="outline">
+      <mat-label>Sexo</mat-label>
+      <mat-select
+        class="form-control" id="sexo"
+        placeholder="Sexo"
+        [(ngModel)]="persona.sexo"
+        required
+        #sexo="ngModel"
+        name="sexo"
+        [ngClass]="{'is-valid': !sexo.invalid, 'is-invalid': sexo.invalid}"
+        >
+        <mat-option>Selecciona opción</mat-option>
+        <ng-container *ngFor="let sexo of selectSexo">
+          <mat-option value="{{ sexo.value }}">{{ sexo.value }} </mat-option>
+        </ng-container>
+        <mat-error *ngIf="sexo.invalid && (sexo.dirty || sexo.touched)"></mat-error>
+      </mat-select>
+    </mat-form-field>
+
+       <mat-form-field appearance="outline">
+        <mat-label>Color favorito</mat-label>
+        <input
+          type="text"
+          class="form-control" id="colorfav"
+          [(ngModel)]="persona.colorFavorito"
+          matInput
+          required
+          placeholder="Color favorito"
+          minlength="3"
+          #colorFav="ngModel"
+          name="colorFav"
+          [ngClass]="{'is-valid': !colorFav.invalid, 'is-invalid': colorFav.invalid}"
+        />
+        <mat-error *ngIf="colorFav.invalid && (colorFav.dirty || colorFav.touched)"></mat-error>
+        <mat-error *ngIf="colorFav.errors?.minlength">Mínimo 3 caracteres</mat-error>
+      </mat-form-field>
+
+      <button [disabled]="!miform.valid" 
+              mat-raised-button #submit color="primary" type="submit">Registrar</button>
+    </form>
+  </mat-card>
+  <br>
+  <br>
+      
+
+
+<mat-card class="contenedor">
+    <h2>Lista de usuarios registrados</h2>
+        <div *ngFor="let cadaEntrada of listaPersonas; let i=index">
+            <h3><strong>{{cadaEntrada.nombre}} {{cadaEntrada.apellidos}}</strong></h3>
+            <ul>
+              <li>Edad:{{cadaEntrada.edad}}&nbsp;DNI:{{cadaEntrada.dni}}&nbsp;</li>
+              <!--Solicitamos la fecha en formato dd/mm/aaaa con un pipe-->
+              <li>Fecha de nacimiento:{{cadaEntrada.cumpleanos | date: 'dd/MM/YYYY'}}&nbsp;</li>
+              <li>Sexo:{{cadaEntrada.sexo}}&nbsp;</li>
+              <li>Color favorito:{{cadaEntrada.colorFavorito}}&nbsp;</li>
+            </ul>     
+            <button mat-raised-button color="primary" (click)="actualizarContacto(i)">Actualizar</button> &nbsp;
+            <button mat-raised-button color="warn" (click)="eliminarContacto(i)">Eliminar</button>
+            <p></p>
+                <mat-divider></mat-divider>
+        </div>
+
+</mat-card>
